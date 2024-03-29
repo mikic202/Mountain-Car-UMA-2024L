@@ -1,0 +1,4 @@
+gymnasium==0.29.1
+mypy==0.942
+black==21.12b0
+pylint==2.12.2
