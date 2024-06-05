@@ -13,7 +13,7 @@ class SarsaWithAproximation:
         self.learning_rate = learning_rate
         self.gamma = gamma  # jak bardzo patrzy w przód
         self.approximation_functions = aproximation_functions
-        self.q_table = np.array([1 for _ in range(len(aproximation_functions))])
+        self.q_table = np.array([0 for _ in range(len(aproximation_functions))])
 
     def get_aproximation_vector(self, state: float, action: float) -> np.ndarray:
         return [f(state, action) for f in self.approximation_functions]
@@ -40,7 +40,16 @@ class SarsaWithAproximation:
 
         self.q_table = updatet_q
 
+    def save_to_file(self, filename: str) -> None:
+        np.save(filename, self.q_table)
+
+    def load_from_file(self, filename: str) -> None:
+        self.q_table = np.load(filename)
+
 
 if __name__ == "__main__":
-    test = SarsaWithAproximation([lambda x, y: x + y, lambda x, y: x * y])
-    print(test(1, 2))
+    test = SarsaWithAproximation(
+        [lambda x, y: x[0] + x[1] + y, lambda x, y: x[1] * x[0] * y]
+    )
+    test.load_from_file("test.npy")
+    print(test([2, 3], 2))
