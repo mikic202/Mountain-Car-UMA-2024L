@@ -8,15 +8,15 @@ class SarsaWithAproximation:
         self,
         aproximation_functions: List[Callable[[float, float], float]],
         learning_rate: float = 1,
-        gamma: float = 0.9,
+        epsilon: float = 0.9,
     ) -> None:
         self.learning_rate = learning_rate
-        self.gamma = gamma  # jak bardzo patrzy w przód
+        self.epsilon = epsilon  # jak bardzo patrzy w przód
         self.approximation_functions = aproximation_functions
         self.q_table = np.array([0 for _ in range(len(aproximation_functions))])
 
     def get_aproximation_vector(self, state: float, action: float) -> np.ndarray:
-        return [f(state, action) for f in self.approximation_functions]
+        return np.array([f(state, action) for f in self.approximation_functions])
 
     def __call__(self, state: float, action: int) -> Any:
         return self.q_table @ self.get_aproximation_vector(state, action)
@@ -26,16 +26,18 @@ class SarsaWithAproximation:
 
     def update(
         self,
-        state: float,
-        action: int,
+        state: np.ndarray,
+        action: np.ndarray,
         reward: float,
-        next_state: float,
-        next_action: int,
+        next_state: np.ndarray,
+        next_action: np.ndarray,
     ) -> None:
         temporal_difference = (
-            reward + self.gamma * self(next_state, next_action) - self(state, action)
+            reward
+            + self.epsilon * self(next_state, next_action.item())
+            - self(state, action.item())
         )
-        gt = self.get_aproximation_vector(state, action) * temporal_difference
+        gt = self.get_aproximation_vector(state, action.item()) * temporal_difference
         updatet_q = self.q_table + self.learning_rate * gt
 
         self.q_table = updatet_q
