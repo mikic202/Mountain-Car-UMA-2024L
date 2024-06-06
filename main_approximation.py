@@ -49,23 +49,23 @@ env = gym.make("MountainCarContinuous-v0")
 
 sarsa = SarsaWithAproximation(
     [
-        lambda x, y: np.sin(x[0] * np.pi) + np.cos(x[1] * np.pi) + np.sin(y * np.pi),
-        lambda x, y: np.cos(x[0] * np.pi) + np.sin(x[1] * np.pi) + np.cos(y * np.pi),
+        lambda x, y: np.sin(x[0] * np.pi) - np.sin(x[1] * np.pi) + np.sin(y * np.pi),
+        lambda x, y: np.cos(x[0] * np.pi) - np.cos(x[1] * np.pi) + np.cos(y * np.pi),
         lambda x, y: x[1] * x[0] * y,
     ],
-    epsilon=0.75,
+    epsilon=0.8,
     learning_rate=0.5,
 )
 
 
-for episode in range(100):
+for episode in range(200):
     sarsa_single_epizode(env, sarsa, 1500)
     print(f"Episode {episode} finished")
 
 
 print(sarsa.q_table)
 
-sarsa.save_to_file("test.npy")
+sarsa.save_to_file("test2.npy")
 
 
 print("Running algorithm")
