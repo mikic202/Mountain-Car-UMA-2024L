@@ -92,17 +92,49 @@ def run(episodes, position_length=30, velocity_length=30, forces_length=4, is_tr
     # plt.savefig(f'mountain_car_cont_4_v_30_p_30_act.png')
     return rewards_iteration_per_episode
 
+
+def plot_img(forces_length, velocity_length, position_length):
+    f = open(f'rewards/mountain_car_cont_f_{forces_length}_v_{velocity_length}_p_{position_length}_train.pkl', 'rb')
+    average_rewards = pickle.load(f)
+    f.close()
+    # arr = np.array([[1, 2], [3, 4], [5, 6], [7, 8]])
+
+    plt.figure(1)
+    plt.plot(average_rewards[:, 0], linestyle='-', color='b')
+    plt.title('Average rewards in each episode during training')
+    plt.xlabel('Episodes')
+    plt.ylabel('Average Rewards')
+
+    # Create the second figure
+    plt.figure(2)
+    plt.plot(average_rewards[:, 1], linestyle='--', color='r')
+    plt.title('Average number of iteration in each episode')
+    plt.xlabel('episodes')
+    plt.ylabel('iterations')
+
+    # Show the plots
+    plt.show()
+    pass
+
 if __name__ == '__main__':
-    position_length=30 
-    velocity_length=30 
+    position_length=28 
+    velocity_length=28 
     forces_length=4
-    train_episodes=100
-    run_episodes=10
-    rewards_iteration_per_episode = run(train_episodes, position_length, velocity_length, forces_length, is_training=True, render=False)
-    f = open(f'rewards/mountain_car_cont_f_{forces_length}_v_{velocity_length}_p_{position_length}_train.pkl','wb')
-    pickle.dump(rewards_iteration_per_episode, f)
-    f.close()
-    rewards_iteration_per_episode = run(run_episodes, is_training=False, render=False)
-    f = open(f'rewards/mountain_car_cont_f_{forces_length}_v_{velocity_length}_p_{position_length}_not_train.pkl','wb')
-    pickle.dump(rewards_iteration_per_episode, f)
-    f.close()
+    train_episodes=2000
+    run_episodes=2
+    train_iterations_times = 5
+    # rewards_iteration_per_episodes = run(train_episodes, position_length, velocity_length, forces_length, is_training=True, render=False)
+
+    # for i in range(train_iterations_times-1):
+    #     rewards_iteration_per_episode_i = run(train_episodes, position_length, velocity_length, forces_length, is_training=True, render=False)
+    #     rewards_iteration_per_episodes += rewards_iteration_per_episode_i
+    # rewards_iteration_per_episodes = rewards_iteration_per_episodes / train_iterations_times
+
+    # f = open(f'rewards/mountain_car_cont_f_{forces_length}_v_{velocity_length}_p_{position_length}_train.pkl','wb')
+    # pickle.dump(rewards_iteration_per_episodes, f)
+    # f.close()
+    # rewards_iteration_per_episode = run(run_episodes, position_length, velocity_length, forces_length, is_training=False, render=False)
+    # f = open(f'rewards/mountain_car_cont_f_{forces_length}_v_{velocity_length}_p_{position_length}_not_train.pkl','wb')
+    # pickle.dump(rewards_iteration_per_episode, f)
+    # f.close()
+    plot_img(forces_length, velocity_length, position_length)
