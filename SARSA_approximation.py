@@ -9,7 +9,9 @@ class SarsaWithAproximation:
         aproximation_functions: List[Callable[[float, float], float]],
         learning_rate: float = 1,
         epsilon: float = 0.9,
+        gamma: float = 0.9,
     ) -> None:
+        self.gamma = gamma
         self.learning_rate = learning_rate
         self.epsilon = epsilon  # jak bardzo patrzy w przód
         self.approximation_functions = aproximation_functions
@@ -34,7 +36,7 @@ class SarsaWithAproximation:
     ) -> None:
         temporal_difference = (
             reward
-            + self.epsilon * self(next_state, next_action.item())
+            + self.gamma * self(next_state, next_action.item())
             - self(state, action.item())
         )
         gt = self.get_aproximation_vector(state, action.item()) * temporal_difference
