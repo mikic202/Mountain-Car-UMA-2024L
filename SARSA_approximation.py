@@ -39,12 +39,15 @@ class SarsaWithAproximation:
             + self.gamma * self(next_state, next_action.item())
             - self(state, action.item())
         )
-        gt = self.get_aproximation_vector(state, action.item()) * temporal_difference
-        updatet_q = self.q_table + self.learning_rate * gt
-
-        self.q_table = updatet_q
+        self.q_table = (
+            self.q_table
+            + self.learning_rate
+            * self.get_aproximation_vector(state, action.item())
+            * temporal_difference
+        )
 
     def save_to_file(self, filename: str) -> None:
+        # print(self.q_table)
         np.save(filename, self.q_table)
 
     def load_from_file(self, filename: str) -> None:
